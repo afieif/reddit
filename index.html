@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menopause Text Labeling</title>
+    <style>
+        /* Keep your existing styles and add: */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #text-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            background-color: #f9f9f9;
+        }
+        #label-buttons {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        #counter {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #navigation {
+            margin-top: 20px;
+        }
+        .guidelines {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-left: 4px solid #4682b4;
+            margin: 20px 0;
+        }
+        .guideline-section {
+            margin-bottom: 15px;
+        }
+        .guideline-section h3 {
+            margin-top: 0;
+            color: #4682b4;
+        }
+        .collapsible {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+        #labeller-selection {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        #labeller-selection button {
+            margin: 5px;
+            padding: 10px 20px;
+        }
+        #labelling-interface {
+            display: none;
+        }
+        #labeller-info {
+            background-color: #e0f7fa;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Menopause Text Labeling Tool</h1>
+    
+    <button type="button" class="collapsible">Click to Show/Hide Labeling Guidelines</button>
+    <div class="content">
+        <div class="guidelines">
+            <h2>Labeling Guidelines</h2>
+            
+            <div class="guideline-section">
+                <h3>Menopause Category</h3>
+                <p>Label text as "Menopause" if it:</p>
+                <ul>
+                    <li><strong>Mentions symptoms</strong>: hot flashes, night sweats, mood changes, sleep disturbances, vaginal dryness, etc.</li>
+                    <li><strong>Discusses medications or treatments</strong>: HRT, hormone therapy, estrogen, progesterone, etc.</li>
+                    <li><strong>Describes personal experience</strong> with menopause or perimenopause</li>
+                    <li><strong>Offers advice based on personal experience</strong> with menopause</li>
+                    <li><strong>Asks questions about menopause symptoms or treatments</strong></li>
+                    <li>Contains <strong>medical information related to menopause</strong></li>
+                </ul>
+            </div>
+            
+            <div class="guideline-section">
+                <h3>Partner/Supporter Category</h3>
+                <p>Label text as "Partner/Supporter" if it:</p>
+                <ul>
+                    <li><strong>Explicitly mentions a relationship</strong> with someone experiencing menopause (e.g., "my wife," "my mother," "my partner")</li>
+                    <li><strong>Asks for advice</strong> on how to support someone going through menopause</li>
+                    <li><strong>Describes observations</strong> of someone else's menopause experience</li>
+                    <li><strong>Expresses concern</strong> for someone experiencing menopause</li>
+                    <li>Discusses <strong>impact of someone's menopause</strong> on a relationship</li>
+                </ul>
+                <p><strong>Note:</strong> If the text indicates the person is both a supporter AND experiencing menopause themselves, label as "Menopause".</p>
+            </div>
+            
+            <div class="guideline-section">
+                <h3>N.A (Not Applicable) Category</h3>
+                <p>Label text as "N.A" if it:</p>
+                <ul>
+                    <li>Is <strong>unrelated to menopause</strong> or supporting someone with menopause</li>
+                    <li>Contains <strong>random or off-topic content</strong></li>
+                    <li>Is <strong>spam or promotional content</strong> not specifically about menopause treatments</li>
+                    <li>Contains <strong>general health information</strong> not specific to menopause</li>
+                    <li>Is <strong>too vague</strong> to determine if it's related to menopause</li>
+                    <li>Is a <strong>general greeting or closing</strong> without menopause-related content</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Labeller Selection Section -->
+    <div id="labeller-selection">
+        <h2>Select your name</h2>
+        <button onclick="selectLabeller('Srushti')">Srushti</button>
+        <button onclick="selectLabeller('Sanika')">Sanika</button>
+        <button onclick="selectLabeller('Sudheendra')">Sudheendra</button>
+        <button onclick="selectLabeller('Afif')">Afif</button>
+    </div>
+    
+    <!-- Labelling Interface (Initially Hidden) -->
+    <div id="labelling-interface">
+        <div id="labeller-info">
+            <h3>Labeller: <span id="labeller-name"></span></h3>
+        </div>
+        
+        <!-- Keep your existing guidelines section -->
+        
+        <div id="text-container">
+            <p id="text-display"></p>
+        </div>
+        
+        <div id="counter">0 labeled, 0 remaining (0/0)</div>
+        
+        <div id="label-buttons">
+            <button onclick="labelText('menopause')">Menopause</button>
+            <button onclick="labelText('partner/supporter')">Partner/Supporter</button>
+            <button onclick="labelText('N.A')">N.A</button>
+        </div>
+        
+        <div id="navigation">
+            <button id="back-button" onclick="goBack()">Go Back</button>
+            <button id="save-button" onclick="saveLabels()">Save Labels</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        // Add collapsible functionality for guidelines
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
